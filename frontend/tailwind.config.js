@@ -1,0 +1,58 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: [
+        './index.html',
+        './src/**/*.{ts,tsx}',
+    ],
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: {
+                'surface-tint':               '#345ea2',
+                'surface-container-highest':  '#e0e3e5',
+                'surface-container-low':      '#f2f4f6',
+                'surface-container-high':     '#e6e8ea',
+                'surface':                    '#f7f9fb',
+                'secondary-container':        '#d5e3fc',
+                'error-container':            '#ffdad6',
+                'error':                      '#ba1a1a',
+                'on-secondary-container':     '#57657a',
+                'on-primary':                 '#ffffff',
+                'surface-dim':                '#d8dadc',
+                'on-background':              '#191c1e',
+                'outline-variant':            '#c3c6d2',
+                'primary-container':          '#003b7e',
+                'on-surface':                 '#191c1e',
+                'background':                 '#f7f9fb',
+                'secondary':                  '#515f74',
+                'on-error':                   '#ffffff',
+                'surface-variant':            '#e0e3e5',
+                'surface-container':          '#eceef0',
+                'inverse-surface':            '#2d3133',
+                'on-secondary':               '#ffffff',
+                'on-surface-variant':         '#434750',
+                'inverse-on-surface':         '#eff1f3',
+                'on-primary-container':       '#81a8f1',
+                'outline':                    '#737782',
+                'primary':                    '#002655',
+                'surface-bright':             '#f7f9fb',
+                'on-tertiary':                '#ffffff',
+                'surface-container-lowest':   '#ffffff',
+                'inverse-primary':            '#acc7ff',
+            },
+            fontFamily: {
+                'headline': ['Manrope', 'sans-serif'],
+                'body':     ['Inter', 'sans-serif'],
+                'label':    ['Inter', 'sans-serif'],
+            },
+            borderRadius: {
+                DEFAULT: '0.5rem',
+                lg:      '0.75rem',
+                xl:      '1rem',
+                full:    '9999px',
+            },
+        },
+    },
+    plugins: [],
+}
+
