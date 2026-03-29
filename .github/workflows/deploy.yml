@@ -45,5 +45,5 @@ jobs:
       - name: Push to Azure LocalGit
         run: |
           AZURE_USER=$(echo "${{ secrets.AZURE_GIT_USER }}" | sed 's/\$/%24/g')
-          git remote add azure "https://${AZURE_USER}:${{ secrets.AZURE_GIT_PASSWORD }}@boersedemo-g9c8bth2gchhgect.eastasia-01.azurewebsites.net/boersedemo.git"
+          git remote add azure "https://${AZURE_USER}:${{ secrets.AZURE_GIT_PASSWORD }}@boersedemo-g9c8bth2gchhgect.scm.eastasia-01.azurewebsites.net:443/boersedemo.git"
           git push azure HEAD:master --force
