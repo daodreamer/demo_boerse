@@ -1,17 +1,15 @@
-name: Deploy to Azure
+name: Build Check
 
 on:
   push:
     branches: [master]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,18 +30,3 @@ jobs:
           cd frontend
           npm ci
           npm run build
-          cd ..
-          cp -r frontend/dist/* public/
-
-      - name: Commit build artifacts for Azure
-        run: |
-          git config user.email "ci@github.com"
-          git config user.name "GitHub Actions"
-          git add -f vendor/ public/
-          git diff --staged --quiet || git commit -m "ci: build artifacts [skip ci]"
-
-      - name: Push to Azure LocalGit
-        run: |
-          AZURE_USER=$(echo "${{ secrets.AZURE_GIT_USER }}" | sed 's/\$/%24/g')
-          git remote add azure "https://${AZURE_USER}:${{ secrets.AZURE_GIT_PASSWORD }}@boersedemo-g9c8bth2gchhgect.scm.eastasia-01.azurewebsites.net:443/boersedemo.git"
-          git push azure HEAD:master --force
