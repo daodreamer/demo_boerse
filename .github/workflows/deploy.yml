@@ -23,7 +23,7 @@ jobs:
           extensions: pdo_mysql, intl, zip, opcache
 
       - name: Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
       - name: Build frontend
         run: |
