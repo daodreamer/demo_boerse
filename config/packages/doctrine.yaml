@@ -30,11 +30,12 @@ when@test:
 when@prod:
     doctrine:
         dbal:
-            # TiDB Cloud Serverless requires SSL. PDO::MYSQL_ATTR_SSL_CA (1010) initiates SSL;
-            # PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (1009) = false skips cert chain verification
-            # so the handshake succeeds. Leave DB_SSL_CA unset for local MySQL (no SSL needed).
+            # TiDB Cloud requires SSL. Use system cert directory (CAPATH) so
+            # mysqlnd can look up ISRG Root X1 via OpenSSL hash index.
+            # PDO::MYSQL_ATTR_SSL_CAPATH (1011) = directory, not a bundle file
+            # PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (1009) = false skips chain verify
             options:
-                1010: '%env(default::DB_SSL_CA)%'
+                1011: '/etc/ssl/certs'
                 1009: false
         orm:
             auto_generate_proxy_classes: false

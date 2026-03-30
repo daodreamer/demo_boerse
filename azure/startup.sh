@@ -5,6 +5,11 @@ cd /home/site/wwwroot
 echo "=== PHP extensions loaded ==="
 php -m | grep -E 'pdo|pdo_mysql|intl' || echo "WARNING: pdo_mysql or intl may be missing"
 
+echo "=== SSL cert directory check ==="
+ls /etc/ssl/certs/ | grep -i isrg || echo "WARNING: ISRG cert not found in /etc/ssl/certs/"
+ls /etc/ssl/certs/ | wc -l
+
+
 echo "=== Clearing Symfony cache ==="
 php bin/console cache:clear --env=prod --no-debug 2>&1 || true
 
