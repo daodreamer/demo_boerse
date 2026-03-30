@@ -1,0 +1,49 @@
+# Production overrides — use with:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Secrets must be injected via environment variables or a secrets manager.
+# Never commit actual credentials to this file.
+
+services:
+
+  php:
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      # Inject at runtime via orchestrator / secrets manager:
+      #   APP_SECRET: <injected>
+      #   DATABASE_URL: <injected>  (TiDB Cloud connection string)
+      RUN_MIGRATIONS: "false"  # Run as a one-shot task before deploying new replicas
+    # No bind mounts in production — all code is baked into the image
+    volumes: []
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  nginx:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          memory: 64M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # No MySQL service in production — TiDB Cloud is used instead.
+  # The 'mysql' service from docker-compose.yml is intentionally omitted.

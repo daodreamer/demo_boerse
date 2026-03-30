@@ -1,0 +1,39 @@
+# =============================================================================
+# Stage 1: Vite / React production build
+# =============================================================================
+FROM node:20-alpine AS node-builder
+
+WORKDIR /build
+
+# Copy dependency manifests first for layer caching
+COPY frontend/package.json frontend/package-lock.json ./
+
+# Deterministic lockfile-based install — no lifecycle scripts
+RUN npm ci --ignore-scripts
+
+# Copy remaining frontend source
+COPY frontend/ ./
+
+# Build production bundle → /build/dist/
+RUN npm run build
+
+# =============================================================================
+# Stage 2: Nginx static file server
+# =============================================================================
+FROM nginx:1.27-alpine AS nginx-prod
+
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy Docker-specific Nginx server block
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy Vite build output to Nginx web root
+COPY --from=node-builder /build/dist/ /usr/share/nginx/html/
+
+# Copy static assets from Symfony public directory
+# NOTE: public/index.php is intentionally excluded — PHP-FPM serves it, not Nginx
+COPY public/favicon.svg /usr/share/nginx/html/favicon.svg
+COPY public/icons.svg   /usr/share/nginx/html/icons.svg
+
+EXPOSE 80

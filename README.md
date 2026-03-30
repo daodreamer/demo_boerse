@@ -10,7 +10,8 @@ A financial portal demo (boerse.de clone) built with Symfony 7 + React 19, deplo
 | Frontend | React 19 · TypeScript · Tailwind CSS 3 · Vite |
 | Database | TiDB Cloud Serverless (MySQL 8.0 compatible) |
 | Hosting | Azure App Service Linux (PHP 8.4) |
-| Web server | Nginx (via `azure/startup.sh`) |
+| Web server | Nginx (Azure: `azure/startup.sh` · Docker: `docker/nginx/default.conf`) |
+| Containers | Docker Compose (php-fpm + nginx + mysql) |
 
 ## Architecture
 
@@ -43,6 +44,8 @@ frontend/src/
 
 ## Local Development
 
+### Option A — Native (Laragon / PHP in PATH)
+
 **Prerequisites:** PHP 8.3+, Composer, Node.js 20+
 
 ```bash
@@ -63,6 +66,19 @@ After config changes:
 ```bash
 php bin/console cache:clear
 ```
+
+### Option B — Docker (production-like, no local PHP needed)
+
+**Prerequisites:** Docker Desktop
+
+```bash
+docker compose up --build
+```
+
+- App: `http://localhost:8080`
+- API: `http://localhost:8080/api/home`
+
+`docker-compose.yml` runs `APP_ENV=prod`. Set `DATABASE_URL` to your TiDB Cloud connection string and `RUN_MIGRATIONS=false` (unless targeting an empty database).
 
 ## Environment Variables
 

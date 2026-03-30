@@ -1,0 +1,98 @@
+services:
+
+  # ---------------------------------------------------------------------------
+  # PHP-FPM — Symfony application
+  # ---------------------------------------------------------------------------
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+      target: php-prod
+    restart: unless-stopped
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      APP_SECRET: dev_secret_change_me_in_env_local
+      # Overrides .env SQLite default — points to the mysql service below
+      DATABASE_URL: "mysql://3YrL1gashvGfiYE.root:DUi2OE7bqGEQPhEr@gateway01.eu-central-1.prod.aws.tidbcloud.com:4000/boerse_demo?serverVersion=8.0&charset=utf8mb4"
+      APP_SHARE_DIR: var/share
+      DEFAULT_URI: "http://localhost:8080"
+      # Run migrations automatically on startup in dev
+      RUN_MIGRATIONS: "false"
+    volumes:
+      # Bind-mount source directories for live PHP reload without rebuild
+      - ./src:/var/www/html/src:ro
+      - ./config:/var/www/html/config:ro
+      - ./migrations:/var/www/html/migrations:ro
+      # Named volume for Symfony cache, logs, and generated proxies
+      - php_var:/var/www/html/var
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "php-fpm", "-t"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # Nginx — static file server + FastCGI proxy to PHP-FPM
+  # ---------------------------------------------------------------------------
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      target: nginx-prod
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      php:
+        condition: service_healthy
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # MySQL 8.0 — local development database
+  # (Production uses TiDB Cloud — this service is dev-only)
+  # ---------------------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_dev_only
+      MYSQL_DATABASE: boerse
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "app", "--password=app_password"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
+# ---------------------------------------------------------------------------
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  # Symfony var/ — cache, logs, generated Doctrine proxies
+  php_var:
+    driver: local
+  # MySQL data — persisted across restarts
+  mysql_data:
+    driver: local

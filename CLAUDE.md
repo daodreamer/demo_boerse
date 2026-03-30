@@ -19,6 +19,26 @@ php bin/console cache:clear
 
 > Vite proxies `/api` → `localhost:8000` automatically (configured in `frontend/vite.config.ts`).
 
+## Docker (local production-like)
+
+```bash
+# Build and start all services (php-fpm + nginx + mysql)
+docker compose up --build
+
+# App available at http://localhost:8080
+# API:  http://localhost:8080/api/home
+
+# View logs
+docker compose logs -f php
+
+# Tear down (keep DB volume)
+docker compose down
+# Tear down and wipe DB
+docker compose down -v
+```
+
+`docker-compose.yml` runs `APP_ENV=prod` with `--no-dev` vendor. Set `DATABASE_URL` in the compose file to point at TiDB Cloud (or leave as local MySQL for schema-only testing). Set `RUN_MIGRATIONS=true` only when targeting an empty database.
+
 ## Architecture
 
 **Stack:** Symfony 7.4 (API only) · React 19 · TypeScript · Tailwind CSS 3 (Vite + PostCSS) · PHP 8.3 (via Laragon)
@@ -27,13 +47,14 @@ php bin/console cache:clear
 - API: `public/index.php` → `src/Kernel.php` → `src/Controller/ApiController.php` → JSON response
 - Frontend: `frontend/src/main.tsx` → `App.tsx` → fetches `GET /api/home` → renders React components
 
-**Data:** All page data is returned as a single JSON object from `GET /api/home`. Static PHP arrays in `ApiController` private methods — no database.
+**Data:** All page data is served from the database via Doctrine ORM. `HomeDataRepository` aggregates all entities and returns them as a single array. Dev uses a local `.env.local` `DATABASE_URL`; Docker uses the value injected via `docker-compose.yml`.
 
 **API endpoint:** `GET /api/home` returns:
 ```
 ticker, fondsStrip, marketIndices, heroStory, newsItems, tagestrends,
 experts, events, analyses, topsFlops, mostSearched, featuredStock,
-aktienNews, indizesTable, devisen, rohstoffe, konjunktur, anlagestrategen, gruppeNews
+aktienNews, indizesTable, devisen, rohstoffe, konjunktur, anlagestrategen,
+gruppeNews, fonds, derivate, etfs, eurex, wissen, service
 ```
 
 **Frontend structure:**

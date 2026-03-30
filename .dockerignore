@@ -1,0 +1,43 @@
+# Version control
+.git
+.gitignore
+
+# PHP deps — rebuilt inside image
+vendor
+
+# Frontend deps and build output — rebuilt inside image
+frontend/node_modules
+frontend/dist
+
+# Symfony runtime — generated at container start
+var/cache
+var/log
+var/share
+
+# Secrets — never bake into image
+.env.local
+.env.*.local
+
+# Azure-specific deployment (not needed for Docker)
+azure/
+push-azure.ps1
+build.sh
+
+# Docker compose files (not needed at runtime)
+docker-compose*
+
+# IDE / OS noise
+.vscode
+.idea
+.history
+*.code-workspace
+
+# Documentation (not needed at runtime)
+*.md
+DESIGN.md
+CLAUDE.md
+screen.png
+code.html
+
+# Tests
+tests/
