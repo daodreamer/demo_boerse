@@ -31,13 +31,12 @@ when@prod:
     doctrine:
         dbal:
             # TiDB Cloud Serverless requires SSL (TLS 1.2+).
-            # PDO MySQL constant integers (PHP enum, PDO_ATTR_DRIVER_SPECIFIC=1000):
-            #   1011 = PDO::MYSQL_ATTR_SSL_CA        (the CA cert to verify server)
-            #   1016 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (false = skip chain verify)
-            # startup.sh prints actual values: "=== PDO SSL constant values ==="
+            # Confirmed actual values on PHP 8.4.16 / Azure App Service:
+            #   1009 = PDO::MYSQL_ATTR_SSL_CA
+            #   1014 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
             options:
-                1011: '%kernel.project_dir%/config/ssl/isrgrootx1.pem'
-                1016: false
+                1009: '%kernel.project_dir%/config/ssl/isrgrootx1.pem'
+                1014: false
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
