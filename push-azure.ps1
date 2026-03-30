@@ -19,7 +19,7 @@ Write-Host "Copying build to public/..." -ForegroundColor Cyan
 Copy-Item -Recurse -Force frontend/dist/* public/
 
 Write-Host "Committing build artifacts..." -ForegroundColor Cyan
-git add -f public/ composer.json azure/startup.sh
+git add -f public/ composer.json azure/startup.sh config/ssl/
 git commit -m "deploy: frontend build + fix Oryx composer post-install" --no-verify 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Nothing to commit, pushing as-is" -ForegroundColor Yellow
