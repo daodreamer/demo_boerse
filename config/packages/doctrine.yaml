@@ -31,11 +31,13 @@ when@prod:
     doctrine:
         dbal:
             # TiDB Cloud Serverless requires SSL (TLS 1.2+).
-            # Use !php/const so Symfony resolves the actual PDO integer at compile-time,
-            # avoiding hard-coded integers that differ between PHP versions/builds.
+            # PDO MySQL constant integers (PHP enum, PDO_ATTR_DRIVER_SPECIFIC=1000):
+            #   1011 = PDO::MYSQL_ATTR_SSL_CA        (the CA cert to verify server)
+            #   1016 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (false = skip chain verify)
+            # startup.sh prints actual values: "=== PDO SSL constant values ==="
             options:
-                !php/const PDO::MYSQL_ATTR_SSL_CA: '%kernel.project_dir%/config/ssl/isrgrootx1.pem'
-                !php/const PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT: false
+                1011: '%kernel.project_dir%/config/ssl/isrgrootx1.pem'
+                1016: false
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
