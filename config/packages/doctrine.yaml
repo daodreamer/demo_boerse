@@ -4,6 +4,12 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        # TiDB Cloud Serverless requires SSL. PDO::MYSQL_ATTR_SSL_CA (1010) initiates SSL;
+        # PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (1009) = false skips cert chain verification
+        # so the handshake succeeds. Leave DB_SSL_CA unset for local MySQL (no SSL needed).
+        options:
+            1010: '%env(default::DB_SSL_CA)%'
+            1009: false
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
