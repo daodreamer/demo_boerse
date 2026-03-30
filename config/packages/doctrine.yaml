@@ -2,6 +2,15 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
 
+        # TiDB Cloud requires SSL in all environments (dev + prod).
+        # PDO constants confirmed on PHP 8.4.16:
+        #   1009 = PDO::MYSQL_ATTR_SSL_CA
+        #   1014 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
+        # These options are harmless for SQLite (ignored by pdo_sqlite).
+        options:
+            1009: '%kernel.project_dir%/config/ssl/isrgrootx1.pem'
+            1014: false
+
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
