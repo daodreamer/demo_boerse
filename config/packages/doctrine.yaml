@@ -4,10 +4,6 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
-        # PDO::MYSQL_ATTR_SSL_CA (1010): set DB_SSL_CA env var to CA cert path for TiDB Cloud.
-        # Leave DB_SSL_CA unset for local MySQL (no SSL needed).
-        options:
-            1010: '%env(default::DB_SSL_CA)%'
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

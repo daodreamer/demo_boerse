@@ -11,3 +11,9 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Doctrine\TiDBSSLMiddleware:
+        arguments:
+            $sslCa: '%env(default::DB_SSL_CA)%'
+        tags:
+            - { name: doctrine.middleware }
