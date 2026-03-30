@@ -1,18 +1,13 @@
 doctrine:
     dbal:
-        driver: mysqli
-        host: '%env(DB_HOST)%'
-        port: '%env(int:DB_PORT)%'
-        user: '%env(DB_USER)%'
-        password: '%env(DB_PASSWORD)%'
-        dbname: '%env(DB_DBNAME)%'
-        charset: utf8mb4
-        server_version: '8.0'
-        # ssl_ca: null means no SSL (local MySQL); set to cert path for TiDB
-        ssl_ca: '%env(default::DB_SSL_CA)%'
+        url: '%env(resolve:DATABASE_URL)%'
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        # PDO::MYSQL_ATTR_SSL_CA (1010): set DB_SSL_CA env var to CA cert path for TiDB Cloud.
+        # Leave DB_SSL_CA unset for local MySQL (no SSL needed).
+        options:
+            1010: '%env(default::DB_SSL_CA)%'
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
