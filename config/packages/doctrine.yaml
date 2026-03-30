@@ -30,13 +30,12 @@ when@test:
 when@prod:
     doctrine:
         dbal:
-            # TiDB Cloud requires SSL. Use system cert directory (CAPATH) so
-            # mysqlnd can look up ISRG Root X1 via OpenSSL hash index.
-            # PDO::MYSQL_ATTR_SSL_CAPATH (1011) = directory, not a bundle file
-            # PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (1009) = false skips chain verify
+            # TiDB Cloud Serverless requires SSL (TLS 1.2+).
+            # Use !php/const so Symfony resolves the actual PDO integer at compile-time,
+            # avoiding hard-coded integers that differ between PHP versions/builds.
             options:
-                1011: '/etc/ssl/certs'
-                1009: false
+                !php/const PDO::MYSQL_ATTR_SSL_CA: '%kernel.project_dir%/config/ssl/isrgrootx1.pem'
+                !php/const PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT: false
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'

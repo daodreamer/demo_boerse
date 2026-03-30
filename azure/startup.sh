@@ -9,6 +9,13 @@ echo "=== SSL cert directory check ==="
 ls /etc/ssl/certs/ | grep -i isrg || echo "WARNING: ISRG cert not found in /etc/ssl/certs/"
 ls /etc/ssl/certs/ | wc -l
 
+echo "=== PDO SSL constant values ==="
+php -r "echo 'MYSQL_ATTR_SSL_CA=' . PDO::MYSQL_ATTR_SSL_CA . PHP_EOL; echo 'MYSQL_ATTR_SSL_VERIFY_SERVER_CERT=' . PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT . PHP_EOL;"
+
+echo "=== SSL cert file check ==="
+ls -la /home/site/wwwroot/config/ssl/isrgrootx1.pem && echo "Cert file OK" || echo "ERROR: cert file missing!"
+
+
 
 echo "=== Clearing Symfony cache ==="
 php bin/console cache:clear --env=prod --no-debug 2>&1 || true
