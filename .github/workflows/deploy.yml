@@ -46,13 +46,31 @@ jobs:
           tags: daodreamer/boerse-nginx:latest
 
   deploy:
-    name: Trigger Azure redeploy
+    name: Deploy to Azure
     runs-on: ubuntu-latest
     needs: [build-php, build-nginx]
     steps:
-      - name: Notify Azure
-        run: |
-          STATUS=$(curl -s -o /tmp/azure_resp.txt -w "%{http_code}" -L -X POST "${{ secrets.AZURE_WEBHOOK_URL }}")
-          echo "HTTP status: $STATUS"
-          cat /tmp/azure_resp.txt
-          [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ] || exit 1
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}"}'
+
+      - name: Deploy sidecar containers
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: boersedemocontainer
+          sitecontainers-config: >-
+            [
+              {
+                "name": "nginx",
+                "image": "daodreamer/boerse-nginx:latest",
+                "targetPort": 80,
+                "isMain": true
+              },
+              {
+                "name": "php",
+                "image": "daodreamer/boerse-php:latest",
+                "targetPort": 9000,
+                "isMain": false
+              }
+            ]
