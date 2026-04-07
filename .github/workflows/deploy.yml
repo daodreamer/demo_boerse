@@ -51,4 +51,8 @@ jobs:
     needs: [build-php, build-nginx]
     steps:
       - name: Notify Azure
-        run: curl -X POST "${{ secrets.AZURE_WEBHOOK_URL }}"
+        run: |
+          STATUS=$(curl -s -o /tmp/azure_resp.txt -w "%{http_code}" -L -X POST "${{ secrets.AZURE_WEBHOOK_URL }}")
+          echo "HTTP status: $STATUS"
+          cat /tmp/azure_resp.txt
+          [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ] || exit 1
