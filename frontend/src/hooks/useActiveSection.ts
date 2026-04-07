@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type React from 'react'
 
 interface ActiveSectionContextValue {
@@ -15,18 +16,24 @@ export const ActiveSectionContext = createContext<ActiveSectionContextValue>({
 
 export function useActiveSectionProvider() {
   const [activeHref, setActiveHref] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleNavClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
       if (href === '#') return
       e.preventDefault()
       const target = document.querySelector(href)
-      if (!target) return
-      const top = target.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET
-      window.scrollTo({ top, behavior: 'smooth' })
-      setActiveHref(href)
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET
+        window.scrollTo({ top, behavior: 'smooth' })
+        setActiveHref(href)
+      } else {
+        // On a different page — navigate home with hash, HomePage will scroll on load
+        navigate('/' + href)
+        setActiveHref(href)
+      }
     },
-    [],
+    [navigate],
   )
 
   return { activeHref, handleNavClick }
