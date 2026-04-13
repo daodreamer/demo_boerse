@@ -1,4 +1,16 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from 'recharts'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
 import type { Tagestrends as TagesData, TagesPanel } from '../types/api'
 
 interface Props {
@@ -9,32 +21,26 @@ function parseNum(s: string): number {
   return parseFloat(s.replace(/\./g, '').replace(',', '.'))
 }
 
-function fmtDe(n: number): string {
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
-
-function closePath(line: string): string {
-  return line + ' L600,80 L0,80 Z'
-}
-
 export function Tagestrends({ data }: Props) {
   const firstId = data.tab_rows[0]?.[0]?.id ?? 'dax'
   const [activeId, setActiveId] = useState(firstId)
 
   const panel: TagesPanel | undefined = data.panels[activeId]
 
-  const { hi, lo, mid } = useMemo(() => {
-    if (!panel) return { hi: 0, lo: 0, mid: '0' }
-    const hi = parseNum(panel.high)
-    const lo = parseNum(panel.low)
-    const mid = ((hi + lo) / 2).toFixed(2).replace('.', ',')
-    return { hi, lo, mid }
-  }, [panel])
+  const activeLabel = (() => {
+    for (const row of data.tab_rows) {
+      const tab = row.find((t) => t.id === activeId)
+      if (tab) return tab.label
+    }
+    return activeId
+  })()
 
   if (!panel) return null
 
   const color = panel.bullish ? '#002655' : '#ba1a1a'
-  const fillId = panel.bullish ? 'trendFill' : 'trendFillBear'
+  const hiNum = parseNum(panel.high)
+  const loNum = parseNum(panel.low)
+  const domain: [number, number] = [loNum * 0.999, hiNum * 1.001]
 
   return (
     <section id="aktien" className="mb-8">
@@ -79,31 +85,63 @@ export function Tagestrends({ data }: Props) {
         <div className="grid lg:grid-cols-2 gap-0">
           {/* Chart */}
           <div className="p-4 border-r border-outline-variant/10">
-            <div className="flex gap-4">
-              {/* Y-axis labels */}
-              <div className="flex flex-col justify-between text-right text-[10px] text-secondary font-body py-1" style={{ minWidth: 60 }}>
-                <span>{fmtDe(hi)}</span>
-                <span>{mid}</span>
-                <span>{fmtDe(lo)}</span>
-              </div>
-              {/* SVG */}
-              <div className="flex-1">
-                <svg viewBox="0 0 600 80" className="w-full" style={{ height: 120 }} preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#002655" stopOpacity="0.18" />
-                      <stop offset="100%" stopColor="#002655" stopOpacity="0" />
-                    </linearGradient>
-                    <linearGradient id="trendFillBear" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#ba1a1a" stopOpacity="0.18" />
-                      <stop offset="100%" stopColor="#ba1a1a" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d={closePath(panel.line)} fill={`url(#${fillId})`} />
-                  <path d={panel.line} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-body text-xs text-secondary uppercase tracking-wider">{activeLabel}</p>
+              <div className="flex items-center gap-3 text-xs font-body text-secondary">
+                <span>H: <strong className="text-on-surface">{panel.high}</strong></span>
+                <span>L: <strong className="text-on-surface">{panel.low}</strong></span>
               </div>
             </div>
+            <ChartContainer
+              config={{ value: { label: activeLabel, color } }}
+              className="h-[140px] w-full"
+            >
+              <AreaChart data={panel.line} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                <defs>
+                  <linearGradient id={`grad-${activeId}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={color} stopOpacity={0.15} />
+                    <stop offset="95%" stopColor={color} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#c3c6d215" />
+                <XAxis
+                  dataKey="time"
+                  tick={{ fontSize: 10, fill: '#515f74' }}
+                  tickLine={false}
+                  axisLine={false}
+                  interval="preserveStartEnd"
+                />
+                <YAxis
+                  domain={domain}
+                  tick={{ fontSize: 10, fill: '#515f74' }}
+                  tickLine={false}
+                  axisLine={false}
+                  width={62}
+                  tickFormatter={(v: number) =>
+                    v.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+                  }
+                />
+                <ChartTooltip
+                  cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: '4 4' }}
+                  content={
+                    <ChartTooltipContent
+                      formatter={(v) =>
+                        (v as number).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      }
+                    />
+                  }
+                />
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke={color}
+                  strokeWidth={2}
+                  fill={`url(#grad-${activeId})`}
+                  dot={false}
+                  activeDot={{ r: 4, fill: color, strokeWidth: 0 }}
+                />
+              </AreaChart>
+            </ChartContainer>
           </div>
 
           {/* Stocks table */}

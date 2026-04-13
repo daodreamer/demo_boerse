@@ -20,8 +20,8 @@ class TopFlopItem
     #[ORM\Column(name: 'change_val', length: 20)]
     private string $changeVal = '';
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $sparkline = null;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $sparkline = null;
 
     #[ORM\Column(length: 10)]
     private string $type = 'top';
@@ -34,8 +34,8 @@ class TopFlopItem
     public function setName(string $v): static { $this->name = $v; return $this; }
     public function getChangeVal(): string { return $this->changeVal; }
     public function setChangeVal(string $v): static { $this->changeVal = $v; return $this; }
-    public function getSparkline(): ?string { return $this->sparkline; }
-    public function setSparkline(?string $v): static { $this->sparkline = $v; return $this; }
+    public function getSparkline(): ?array { return $this->sparkline; }
+    public function setSparkline(?array $v): static { $this->sparkline = $v; return $this; }
     public function getType(): string { return $this->type; }
     public function setType(string $v): static { $this->type = $v; return $this; }
     public function getSortOrder(): int { return $this->sortOrder; }

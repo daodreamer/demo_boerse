@@ -4,6 +4,8 @@ import { useActiveSection } from '../../hooks/useActiveSection'
 import { useLoginModal } from '../../hooks/useLoginModal'
 import { navItems } from '../../data/navItems'
 import { MobileNav } from './MobileNav'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export function TopNav() {
   const [dark, toggleDark] = useDarkMode()
@@ -21,13 +23,15 @@ export function TopNav() {
         {/* Top row: logo + search + actions */}
         <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between py-2">
           {/* Hamburger (mobile only) */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setMobileOpen(true)}
-            className="md:hidden p-2 -ml-2 rounded-lg hover:bg-surface-container transition-colors text-outline"
+            className="md:hidden -ml-2 text-outline hover:bg-surface-container"
             aria-label="Menü öffnen"
           >
             <span className="material-symbols-outlined">menu</span>
-          </button>
+          </Button>
 
           <a href="/" className="text-2xl font-black text-primary dark:text-white font-headline">
             boerse.de
@@ -35,32 +39,38 @@ export function TopNav() {
 
           <div className="flex items-center gap-4">
             <div className="relative hidden lg:block">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
                 search
               </span>
-              <input
+              <Input
                 type="text"
                 placeholder="Suche nach WKN/ISIN..."
-                className="bg-surface-container-highest rounded-full pl-10 pr-4 py-1.5 text-sm
-                           focus:ring-0 border-none w-64 font-body"
+                className="bg-surface-container-highest rounded-full pl-10 pr-4 py-1.5 text-sm border-none w-64 font-body focus-visible:ring-1 focus-visible:ring-primary/30"
               />
             </div>
 
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={toggleDark}
               aria-label="Farbmodus wechseln"
-              className="p-2 rounded-full hover:bg-surface-container transition-colors text-outline"
+              className="rounded-full text-outline hover:bg-surface-container"
             >
               <span className="material-symbols-outlined">
                 {dark ? 'light_mode' : 'dark_mode'}
               </span>
-            </button>
+            </Button>
 
-            <button onClick={openArea} className="btn-primary text-sm hidden sm:block">Login</button>
+            <Button
+              onClick={openArea}
+              className="btn-primary hidden sm:inline-flex h-auto py-2 px-5 rounded-full"
+            >
+              Login
+            </Button>
           </div>
         </div>
 
-        {/* Secondary nav: visible only on md (768–1023px), hidden on sm and lg+ */}
+        {/* Secondary nav: visible only on md (768–1023px) */}
         <div className="hidden md:block lg:hidden border-t border-[#002655]/10 dark:border-white/10 overflow-x-auto">
           <div className="flex items-center px-6">
             {navItems.map((item) => (

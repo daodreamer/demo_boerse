@@ -5,15 +5,24 @@ interface Props {
   mostSearched: MostSearchedItem[]
 }
 
-function Sparkline({ path, bullish }: { path: string | null; bullish: boolean }) {
-  if (!path) return <span className="text-secondary text-xs">–</span>
+function MiniSparkline({ data, bullish }: { data: number[] | null; bullish: boolean }) {
+  if (!data || data.length < 2) return <span className="text-secondary text-xs w-16 inline-block">–</span>
+  const W = 64, H = 24
+  const min = Math.min(...data)
+  const max = Math.max(...data)
+  const range = max - min || 1
+  const points = data
+    .map((v, i) =>
+      `${((i / (data.length - 1)) * W).toFixed(1)},${(H - ((v - min) / range) * H).toFixed(1)}`
+    )
+    .join(' ')
   return (
-    <svg viewBox="0 0 100 30" className="w-16 h-6" preserveAspectRatio="none">
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="shrink-0">
       <polyline
-        points={path.replace(/[ML]/g, '').trim()}
+        points={points}
         fill="none"
         stroke={bullish ? '#002655' : '#ba1a1a'}
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -40,7 +49,7 @@ export function TopsFlops({ data, mostSearched }: Props) {
                 <div key={item.name} className="flex items-center justify-between px-5 py-3 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors cursor-pointer">
                   <span className="font-body text-sm font-medium text-on-surface">{item.name}</span>
                   <div className="flex items-center gap-3">
-                    <Sparkline path={item.sparkline} bullish />
+                    <MiniSparkline data={item.sparkline} bullish />
                     <span className="text-sm font-bold text-primary w-16 text-right">{item.change}</span>
                   </div>
                 </div>
@@ -55,7 +64,7 @@ export function TopsFlops({ data, mostSearched }: Props) {
                 <div key={item.name} className="flex items-center justify-between px-5 py-3 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors cursor-pointer">
                   <span className="font-body text-sm font-medium text-on-surface">{item.name}</span>
                   <div className="flex items-center gap-3">
-                    <Sparkline path={item.sparkline} bullish={false} />
+                    <MiniSparkline data={item.sparkline} bullish={false} />
                     <span className="text-sm font-bold text-error w-16 text-right">{item.change}</span>
                   </div>
                 </div>

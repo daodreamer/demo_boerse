@@ -26,8 +26,8 @@ class MarketIndex
     #[ORM\Column]
     private bool $bullish = true;
 
-    #[ORM\Column(length: 255)]
-    private string $sparkline = '';
+    #[ORM\Column(type: 'json')]
+    private array $sparkline = [];
 
     #[ORM\Column]
     private int $sortOrder = 0;
@@ -41,8 +41,8 @@ class MarketIndex
     public function setChangeVal(string $v): static { $this->changeVal = $v; return $this; }
     public function isBullish(): bool { return $this->bullish; }
     public function setBullish(bool $v): static { $this->bullish = $v; return $this; }
-    public function getSparkline(): string { return $this->sparkline; }
-    public function setSparkline(string $v): static { $this->sparkline = $v; return $this; }
+    public function getSparkline(): array { return $this->sparkline; }
+    public function setSparkline(array $v): static { $this->sparkline = $v; return $this; }
     public function getSortOrder(): int { return $this->sortOrder; }
     public function setSortOrder(int $v): static { $this->sortOrder = $v; return $this; }
 

@@ -37,12 +37,17 @@ export interface FondsStrip {
   bcdi: BcdiItem[]
 }
 
+export interface ChartDataPoint {
+  time: string
+  value: number
+}
+
 export interface MarketIndex {
   name: string
   price: string
   change: string
   bullish: boolean
-  sparkline: string
+  sparkline: number[]
 }
 
 export interface HeroStory {
@@ -77,7 +82,7 @@ export interface TagesPanel {
   bullish: boolean
   high: string
   low: string
-  line: string
+  line: ChartDataPoint[]
   stocks: TagesStock[]
 }
 
@@ -119,7 +124,7 @@ export interface Analyses {
 export interface TopFlopItem {
   name: string
   change: string
-  sparkline: string | null
+  sparkline: number[] | null
 }
 
 export interface TopsFlops {

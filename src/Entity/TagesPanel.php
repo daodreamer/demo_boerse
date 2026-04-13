@@ -26,8 +26,8 @@ class TagesPanel
     #[ORM\Column(length: 20)]
     private string $low = '';
 
-    #[ORM\Column(type: 'text')]
-    private string $line = '';
+    #[ORM\Column(type: 'json')]
+    private array $line = [];
 
     #[ORM\Column(type: 'json')]
     private array $stocks = [];
@@ -41,8 +41,8 @@ class TagesPanel
     public function setHigh(string $v): static { $this->high = $v; return $this; }
     public function getLow(): string { return $this->low; }
     public function setLow(string $v): static { $this->low = $v; return $this; }
-    public function getLine(): string { return $this->line; }
-    public function setLine(string $v): static { $this->line = $v; return $this; }
+    public function getLine(): array { return $this->line; }
+    public function setLine(array $v): static { $this->line = $v; return $this; }
     public function getStocks(): array { return $this->stocks; }
     public function setStocks(array $v): static { $this->stocks = $v; return $this; }
 

@@ -11,6 +11,53 @@
   body {
     @apply bg-surface text-on-surface;
   }
+  :root {
+    /* shadcn semantic tokens — mapped to boerse.de palette */
+    --background:           248 33% 98%;    /* #f7f9fb */
+    --foreground:           210 9%  11%;    /* #191c1e */
+    --card:                   0  0% 100%;  /* white   */
+    --card-foreground:      210  9% 11%;
+    --popover:                0  0% 100%;
+    --popover-foreground:   210  9% 11%;
+    --primary:              215 100% 17%;   /* #002655 */
+    --primary-foreground:     0  0% 100%;
+    --secondary:            215  18% 39%;   /* #515f74 */
+    --secondary-foreground:   0  0% 100%;
+    --muted:                210  12% 94%;   /* #eceef0 */
+    --muted-foreground:     215  18% 39%;
+    --accent:               210  12% 96%;   /* #f2f4f6 */
+    --accent-foreground:    215 100% 17%;
+    --destructive:            0  74% 42%;   /* #ba1a1a */
+    --destructive-foreground: 0   0% 100%;
+    --border:               220  15% 84%;   /* #c3c6d2 */
+    --input:                210  12% 94%;
+    --ring:                 215 100% 17%;
+    --radius:               0.5rem;
+  }
+  .dark {
+    --background:           224  65%  11%;  /* ~#001a3a */
+    --foreground:           210  12%  94%;
+    --card:                 224  65%  14%;
+    --card-foreground:      210  12%  94%;
+    --popover:              224  65%  14%;
+    --popover-foreground:   210  12%  94%;
+    --primary:              219  100% 74%;  /* lighter blue */
+    --primary-foreground:   215 100%  17%;
+    --secondary:            224  30%  22%;
+    --secondary-foreground: 210  12%  94%;
+    --muted:                224  30%  18%;
+    --muted-foreground:     215  18%  65%;
+    --accent:               224  30%  18%;
+    --accent-foreground:    210  12%  94%;
+    --destructive:            0  74%  55%;
+    --destructive-foreground: 0   0% 100%;
+    --border:               215  25%  25%;
+    --input:                215  25%  20%;
+    --ring:                 219  60%  55%;
+  }
+  * {
+    @apply border-border;
+  }
 }
 
 @layer components {

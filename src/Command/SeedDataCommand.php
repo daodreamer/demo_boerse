@@ -151,9 +151,9 @@ class SeedDataCommand extends Command
     private function seedMarketIndices(): void
     {
         $data = [
-            ['DAX',       '22.728,00', '+1,16%', true,  'M0,25 L10,22 L20,24 L30,15 L40,18 L50,10 L60,12 L70,5 L80,8 L90,2 L100,6'],
-            ['Dow Jones', '46.248,00', '+0,03%', true,  'M0,20 L10,18 L20,22 L30,18 L40,16 L50,18 L60,15 L70,16 L80,14 L90,15 L100,14'],
-            ['Gold (USD)','4.444,00',  '-1,37%', false, 'M0,10 L10,12 L20,8 L30,14 L40,12 L50,16 L60,14 L70,20 L80,22 L90,24 L100,26'],
+            ['DAX',        '22.728,00', '+1,16%', true,  [25,22,24,15,18,10,12,5,8,2,6]],
+            ['Dow Jones',  '46.248,00', '+0,03%', true,  [20,18,22,18,16,18,15,16,14,15,14]],
+            ['Gold (USD)', '4.444,00',  '-1,37%', false, [10,12,8,14,12,16,14,20,22,24,26]],
         ];
         foreach ($data as $i => [$name, $price, $change, $bullish, $spark]) {
             $e = (new MarketIndex())->setName($name)->setPrice($price)->setChangeVal($change)->setBullish($bullish)->setSparkline($spark)->setSortOrder($i);
@@ -244,8 +244,16 @@ class SeedDataCommand extends Command
             }
         }
 
+        // line: 18 time-series data points from 09:00–17:35 as [{time, value}] arrays
         $panels = [
-            'dax'         => [false,'23.072,00','22.728,00','M0,12 C80,8 160,15 240,28 C320,42 390,55 460,62 C510,66 560,70 600,72',[
+            'dax'         => [false,'23.072,00','22.728,00',[
+                ['time'=>'09:00','value'=>23072.0],['time'=>'09:30','value'=>23045.0],['time'=>'10:00','value'=>23010.0],
+                ['time'=>'10:30','value'=>22985.0],['time'=>'11:00','value'=>22940.0],['time'=>'11:30','value'=>22905.0],
+                ['time'=>'12:00','value'=>22875.0],['time'=>'12:30','value'=>22855.0],['time'=>'13:00','value'=>22848.0],
+                ['time'=>'13:30','value'=>22830.0],['time'=>'14:00','value'=>22810.0],['time'=>'14:30','value'=>22790.0],
+                ['time'=>'15:00','value'=>22775.0],['time'=>'15:30','value'=>22760.0],['time'=>'16:00','value'=>22750.0],
+                ['time'=>'16:30','value'=>22740.0],['time'=>'17:00','value'=>22732.0],['time'=>'17:35','value'=>22728.0],
+            ],[
                 ['name'=>'Rheinmetall','price'=>'1.487,75','change'=>'-0,10','bullish'=>false],
                 ['name'=>'Scout24','price'=>'64,40','change'=>'-0,12','bullish'=>false],
                 ['name'=>'Henkel Vz','price'=>'67,39','change'=>'-0,18','bullish'=>false],
@@ -253,7 +261,14 @@ class SeedDataCommand extends Command
                 ['name'=>'Vonovia','price'=>'21,42','change'=>'-1,31','bullish'=>false],
                 ['name'=>'Qiagen','price'=>'34,81','change'=>'-1,44','bullish'=>false],
             ]],
-            'mdax'        => [false,'28.850,00','28.520,00','M0,35 C80,28 160,22 240,30 C320,38 390,34 460,42 C510,48 560,52 600,56',[
+            'mdax'        => [false,'28.850,00','28.520,00',[
+                ['time'=>'09:00','value'=>28850.0],['time'=>'09:30','value'=>28820.0],['time'=>'10:00','value'=>28790.0],
+                ['time'=>'10:30','value'=>28760.0],['time'=>'11:00','value'=>28740.0],['time'=>'11:30','value'=>28720.0],
+                ['time'=>'12:00','value'=>28700.0],['time'=>'12:30','value'=>28680.0],['time'=>'13:00','value'=>28660.0],
+                ['time'=>'13:30','value'=>28640.0],['time'=>'14:00','value'=>28620.0],['time'=>'14:30','value'=>28600.0],
+                ['time'=>'15:00','value'=>28580.0],['time'=>'15:30','value'=>28560.0],['time'=>'16:00','value'=>28545.0],
+                ['time'=>'16:30','value'=>28535.0],['time'=>'17:00','value'=>28525.0],['time'=>'17:35','value'=>28520.0],
+            ],[
                 ['name'=>'TeamViewer','price'=>'12,80','change'=>'+2,10','bullish'=>true],
                 ['name'=>'Dürr','price'=>'22,45','change'=>'+1,05','bullish'=>true],
                 ['name'=>'Evotec','price'=>'5,85','change'=>'-0,85','bullish'=>false],
@@ -261,63 +276,133 @@ class SeedDataCommand extends Command
                 ['name'=>'Thyssenkrupp','price'=>'4,92','change'=>'-2,00','bullish'=>false],
                 ['name'=>'Aixtron','price'=>'18,44','change'=>'+0,76','bullish'=>true],
             ]],
-            'sdax'        => [true,'14.612,00','14.420,00','M0,55 C80,48 160,40 240,35 C320,30 390,28 460,32 C510,30 560,26 600,22',[
+            'sdax'        => [true,'14.612,00','14.420,00',[
+                ['time'=>'09:00','value'=>14420.0],['time'=>'09:30','value'=>14438.0],['time'=>'10:00','value'=>14455.0],
+                ['time'=>'10:30','value'=>14470.0],['time'=>'11:00','value'=>14482.0],['time'=>'11:30','value'=>14492.0],
+                ['time'=>'12:00','value'=>14500.0],['time'=>'12:30','value'=>14510.0],['time'=>'13:00','value'=>14520.0],
+                ['time'=>'13:30','value'=>14534.0],['time'=>'14:00','value'=>14548.0],['time'=>'14:30','value'=>14562.0],
+                ['time'=>'15:00','value'=>14575.0],['time'=>'15:30','value'=>14588.0],['time'=>'16:00','value'=>14596.0],
+                ['time'=>'16:30','value'=>14604.0],['time'=>'17:00','value'=>14609.0],['time'=>'17:35','value'=>14612.0],
+            ],[
                 ['name'=>'Fielmann','price'=>'47,90','change'=>'+1,48','bullish'=>true],
                 ['name'=>'SMA Solar','price'=>'16,22','change'=>'+2,00','bullish'=>true],
                 ['name'=>'Nagarro','price'=>'40,10','change'=>'-0,50','bullish'=>false],
                 ['name'=>'Knaus Tabbert','price'=>'22,85','change'=>'+0,88','bullish'=>true],
             ]],
-            'tecdax'      => [false,'3.512,00','3.420,00','M0,18 C80,14 160,22 240,32 C320,44 390,50 460,58 C510,64 560,68 600,72',[
+            'tecdax'      => [false,'3.512,00','3.420,00',[
+                ['time'=>'09:00','value'=>3512.0],['time'=>'09:30','value'=>3506.0],['time'=>'10:00','value'=>3498.0],
+                ['time'=>'10:30','value'=>3490.0],['time'=>'11:00','value'=>3480.0],['time'=>'11:30','value'=>3472.0],
+                ['time'=>'12:00','value'=>3464.0],['time'=>'12:30','value'=>3458.0],['time'=>'13:00','value'=>3454.0],
+                ['time'=>'13:30','value'=>3448.0],['time'=>'14:00','value'=>3442.0],['time'=>'14:30','value'=>3438.0],
+                ['time'=>'15:00','value'=>3433.0],['time'=>'15:30','value'=>3430.0],['time'=>'16:00','value'=>3428.0],
+                ['time'=>'16:30','value'=>3425.0],['time'=>'17:00','value'=>3422.0],['time'=>'17:35','value'=>3420.0],
+            ],[
                 ['name'=>'SAP SE','price'=>'242,30','change'=>'-0,42','bullish'=>false],
                 ['name'=>'Infineon','price'=>'28,54','change'=>'-1,15','bullish'=>false],
                 ['name'=>'Deutsche Telekom','price'=>'29,12','change'=>'+0,35','bullish'=>true],
                 ['name'=>'QIAGEN','price'=>'34,81','change'=>'-1,44','bullish'=>false],
                 ['name'=>'Nemetschek','price'=>'94,40','change'=>'+1,10','bullish'=>true],
             ]],
-            'dow'         => [true,'46.410,00','46.100,00','M0,50 C80,45 160,42 240,44 C320,40 390,36 460,38 C510,36 560,34 600,32',[
+            'dow'         => [true,'46.410,00','46.100,00',[
+                ['time'=>'15:30','value'=>46100.0],['time'=>'15:45','value'=>46128.0],['time'=>'16:00','value'=>46155.0],
+                ['time'=>'16:15','value'=>46178.0],['time'=>'16:30','value'=>46195.0],['time'=>'16:45','value'=>46210.0],
+                ['time'=>'17:00','value'=>46225.0],['time'=>'17:15','value'=>46238.0],['time'=>'17:30','value'=>46248.0],
+                ['time'=>'17:45','value'=>46260.0],['time'=>'18:00','value'=>46272.0],['time'=>'18:15','value'=>46282.0],
+                ['time'=>'18:30','value'=>46290.0],['time'=>'18:45','value'=>46298.0],['time'=>'19:00','value'=>46304.0],
+                ['time'=>'19:15','value'=>46308.0],['time'=>'19:30','value'=>46311.0],['time'=>'21:30','value'=>46410.0],
+            ],[
                 ['name'=>'Apple','price'=>'189,30','change'=>'+0,55','bullish'=>true],
                 ['name'=>'Microsoft','price'=>'415,70','change'=>'+0,80','bullish'=>true],
                 ['name'=>'Boeing','price'=>'172,40','change'=>'-0,90','bullish'=>false],
                 ['name'=>'Goldman Sachs','price'=>'498,20','change'=>'+1,20','bullish'=>true],
                 ['name'=>'Chevron','price'=>'152,80','change'=>'+2,10','bullish'=>true],
             ]],
-            'bcdi'        => [true,'202,50','200,80','M0,65 C80,58 160,50 240,42 C320,33 390,26 460,20 C510,16 560,13 600,10',[
+            'bcdi'        => [true,'202,50','200,80',[
+                ['time'=>'09:00','value'=>200.80],['time'=>'09:30','value'=>200.95],['time'=>'10:00','value'=>201.12],
+                ['time'=>'10:30','value'=>201.28],['time'=>'11:00','value'=>201.42],['time'=>'11:30','value'=>201.55],
+                ['time'=>'12:00','value'=>201.65],['time'=>'12:30','value'=>201.75],['time'=>'13:00','value'=>201.84],
+                ['time'=>'13:30','value'=>201.92],['time'=>'14:00','value'=>202.00],['time'=>'14:30','value'=>202.08],
+                ['time'=>'15:00','value'=>202.16],['time'=>'15:30','value'=>202.24],['time'=>'16:00','value'=>202.32],
+                ['time'=>'16:30','value'=>202.40],['time'=>'17:00','value'=>202.46],['time'=>'17:35','value'=>202.50],
+            ],[
                 ['name'=>'Quanta Services','price'=>'498,00','change'=>'+2,12','bullish'=>true],
                 ['name'=>'Cintas','price'=>'182,40','change'=>'+0,65','bullish'=>true],
                 ['name'=>'Alphabet','price'=>'175,20','change'=>'+1,08','bullish'=>true],
                 ['name'=>'Booking Holdings','price'=>'4.240,00','change'=>'+0,80','bullish'=>true],
             ]],
-            'bcdi_us'     => [true,'1.658,00','1.628,00','M0,60 C80,52 160,44 240,38 C320,30 390,24 460,18 C510,14 560,11 600,8',[
+            'bcdi_us'     => [true,'1.658,00','1.628,00',[
+                ['time'=>'09:00','value'=>1628.0],['time'=>'09:30','value'=>1631.0],['time'=>'10:00','value'=>1634.0],
+                ['time'=>'10:30','value'=>1637.0],['time'=>'11:00','value'=>1640.0],['time'=>'11:30','value'=>1643.0],
+                ['time'=>'12:00','value'=>1645.0],['time'=>'12:30','value'=>1648.0],['time'=>'13:00','value'=>1650.0],
+                ['time'=>'13:30','value'=>1652.0],['time'=>'14:00','value'=>1653.5],['time'=>'14:30','value'=>1655.0],
+                ['time'=>'15:00','value'=>1656.0],['time'=>'15:30','value'=>1656.8],['time'=>'16:00','value'=>1657.2],
+                ['time'=>'16:30','value'=>1657.6],['time'=>'17:00','value'=>1657.8],['time'=>'17:35','value'=>1658.0],
+            ],[
                 ['name'=>'Apple','price'=>'189,30','change'=>'+0,55','bullish'=>true],
                 ['name'=>'Visa','price'=>'280,90','change'=>'+0,32','bullish'=>true],
                 ['name'=>'Mastercard','price'=>'490,20','change'=>'+0,44','bullish'=>true],
                 ['name'=>'UnitedHealth','price'=>'520,80','change'=>'-0,15','bullish'=>false],
             ]],
-            'bcdi_de'     => [true,'830,00','818,00','M0,68 C80,60 160,50 240,40 C320,30 390,22 460,16 C510,12 560,9 600,7',[
+            'bcdi_de'     => [true,'830,00','818,00',[
+                ['time'=>'09:00','value'=>818.0],['time'=>'09:30','value'=>819.5],['time'=>'10:00','value'=>820.8],
+                ['time'=>'10:30','value'=>822.0],['time'=>'11:00','value'=>823.2],['time'=>'11:30','value'=>824.2],
+                ['time'=>'12:00','value'=>825.0],['time'=>'12:30','value'=>825.8],['time'=>'13:00','value'=>826.5],
+                ['time'=>'13:30','value'=>827.2],['time'=>'14:00','value'=>827.8],['time'=>'14:30','value'=>828.3],
+                ['time'=>'15:00','value'=>828.8],['time'=>'15:30','value'=>829.2],['time'=>'16:00','value'=>829.5],
+                ['time'=>'16:30','value'=>829.7],['time'=>'17:00','value'=>829.9],['time'=>'17:35','value'=>830.0],
+            ],[
                 ['name'=>'Allianz','price'=>'284,90','change'=>'+1,15','bullish'=>true],
                 ['name'=>'SAP SE','price'=>'242,30','change'=>'-0,42','bullish'=>false],
                 ['name'=>'Münchener Rück','price'=>'460,40','change'=>'+0,88','bullish'=>true],
                 ['name'=>'Hannover Rück','price'=>'228,60','change'=>'+1,30','bullish'=>true],
             ]],
-            'aktienfonds' => [true,'128,40','126,90','M0,55 C80,50 160,44 240,40 C320,36 390,32 460,28 C510,25 560,22 600,20',[
+            'aktienfonds' => [true,'128,40','126,90',[
+                ['time'=>'09:00','value'=>126.90],['time'=>'09:30','value'=>127.05],['time'=>'10:00','value'=>127.20],
+                ['time'=>'10:30','value'=>127.35],['time'=>'11:00','value'=>127.50],['time'=>'11:30','value'=>127.62],
+                ['time'=>'12:00','value'=>127.72],['time'=>'12:30','value'=>127.82],['time'=>'13:00','value'=>127.90],
+                ['time'=>'13:30','value'=>127.98],['time'=>'14:00','value'=>128.05],['time'=>'14:30','value'=>128.12],
+                ['time'=>'15:00','value'=>128.20],['time'=>'15:30','value'=>128.27],['time'=>'16:00','value'=>128.32],
+                ['time'=>'16:30','value'=>128.36],['time'=>'17:00','value'=>128.38],['time'=>'17:35','value'=>128.40],
+            ],[
                 ['name'=>'Quanta Services','price'=>'498,00','change'=>'+2,12','bullish'=>true],
                 ['name'=>'Allianz','price'=>'284,90','change'=>'+1,15','bullish'=>true],
                 ['name'=>'Alphabet','price'=>'175,20','change'=>'+1,08','bullish'=>true],
                 ['name'=>'Münchener Rück','price'=>'460,40','change'=>'+0,88','bullish'=>true],
             ]],
-            'weltfonds'   => [false,'119,20','117,90','M0,25 C80,30 160,36 240,40 C320,46 390,50 460,54 C510,57 560,59 600,62',[
+            'weltfonds'   => [false,'119,20','117,90',[
+                ['time'=>'09:00','value'=>119.20],['time'=>'09:30','value'=>119.10],['time'=>'10:00','value'=>119.00],
+                ['time'=>'10:30','value'=>118.88],['time'=>'11:00','value'=>118.78],['time'=>'11:30','value'=>118.70],
+                ['time'=>'12:00','value'=>118.62],['time'=>'12:30','value'=>118.55],['time'=>'13:00','value'=>118.48],
+                ['time'=>'13:30','value'=>118.42],['time'=>'14:00','value'=>118.36],['time'=>'14:30','value'=>118.28],
+                ['time'=>'15:00','value'=>118.22],['time'=>'15:30','value'=>118.16],['time'=>'16:00','value'=>118.10],
+                ['time'=>'16:30','value'=>118.03],['time'=>'17:00','value'=>117.96],['time'=>'17:35','value'=>117.90],
+            ],[
                 ['name'=>'Visa','price'=>'280,90','change'=>'+0,32','bullish'=>true],
                 ['name'=>'Microsoft','price'=>'415,70','change'=>'+0,80','bullish'=>true],
                 ['name'=>'LVMH','price'=>'592,00','change'=>'-0,60','bullish'=>false],
                 ['name'=>'Nestlé','price'=>'82,10','change'=>'-0,85','bullish'=>false],
             ]],
-            'techfonds'   => [true,'130,20','128,50','M0,60 C80,52 160,43 240,36 C320,28 390,22 460,18 C510,14 560,11 600,8',[
+            'techfonds'   => [true,'130,20','128,50',[
+                ['time'=>'09:00','value'=>128.50],['time'=>'09:30','value'=>128.68],['time'=>'10:00','value'=>128.86],
+                ['time'=>'10:30','value'=>129.05],['time'=>'11:00','value'=>129.22],['time'=>'11:30','value'=>129.38],
+                ['time'=>'12:00','value'=>129.52],['time'=>'12:30','value'=>129.65],['time'=>'13:00','value'=>129.76],
+                ['time'=>'13:30','value'=>129.86],['time'=>'14:00','value'=>129.94],['time'=>'14:30','value'=>130.02],
+                ['time'=>'15:00','value'=>130.08],['time'=>'15:30','value'=>130.12],['time'=>'16:00','value'=>130.15],
+                ['time'=>'16:30','value'=>130.17],['time'=>'17:00','value'=>130.19],['time'=>'17:35','value'=>130.20],
+            ],[
                 ['name'=>'Nvidia','price'=>'824,40','change'=>'+3,50','bullish'=>true],
                 ['name'=>'ASML','price'=>'820,00','change'=>'+1,20','bullish'=>true],
                 ['name'=>'SAP SE','price'=>'242,30','change'=>'-0,42','bullish'=>false],
                 ['name'=>'Infineon','price'=>'28,54','change'=>'-1,15','bullish'=>false],
             ]],
-            'divfonds'    => [true,'100,10','98,80','M0,52 C80,46 160,40 240,36 C320,32 390,28 460,26 C510,24 560,22 600,20',[
+            'divfonds'    => [true,'100,10','98,80',[
+                ['time'=>'09:00','value'=>98.80],['time'=>'09:30','value'=>98.92],['time'=>'10:00','value'=>99.05],
+                ['time'=>'10:30','value'=>99.18],['time'=>'11:00','value'=>99.30],['time'=>'11:30','value'=>99.42],
+                ['time'=>'12:00','value'=>99.52],['time'=>'12:30','value'=>99.62],['time'=>'13:00','value'=>99.70],
+                ['time'=>'13:30','value'=>99.78],['time'=>'14:00','value'=>99.86],['time'=>'14:30','value'=>99.93],
+                ['time'=>'15:00','value'=>99.98],['time'=>'15:30','value'=>100.03],['time'=>'16:00','value'=>100.06],
+                ['time'=>'16:30','value'=>100.08],['time'=>'17:00','value'=>100.09],['time'=>'17:35','value'=>100.10],
+            ],[
                 ['name'=>'Allianz','price'=>'284,90','change'=>'+1,15','bullish'=>true],
                 ['name'=>'Deutsche Post','price'=>'40,22','change'=>'+0,50','bullish'=>true],
                 ['name'=>'Münchener Rück','price'=>'460,40','change'=>'+0,88','bullish'=>true],
@@ -374,7 +459,7 @@ class SeedDataCommand extends Command
     private function seedTopsFlops(): void
     {
         $tops = [
-            ['Lanxess',    '+16,96%', 'M0,25 L20,28 L40,15 L60,10 L80,5 L100,2'],
+            ['Lanxess',    '+16,96%', [25,28,15,10,5,2]],
             ['LPKF Laser', '+9,80%',  null],
         ];
         foreach ($tops as $i => [$name, $change, $spark]) {
@@ -382,7 +467,7 @@ class SeedDataCommand extends Command
             $this->em->persist($e);
         }
         $flops = [
-            ['HelloFresh',        '-4,00%', 'M0,5 L20,2 L40,12 L60,18 L80,22 L100,28'],
+            ['HelloFresh',        '-4,00%', [5,2,12,18,22,28]],
             ['Micron Technology', '-4,49%', null],
         ];
         foreach ($flops as $i => [$name, $change, $spark]) {
