@@ -74,3 +74,6 @@ jobs:
                 "isMain": false
               }
             ]
+
+      - name: Restart Azure Web App to pull latest images
+        run: az webapp restart --name boersedemocontainer --resource-group demo
