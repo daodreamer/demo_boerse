@@ -2,6 +2,8 @@
 
 A financial portal demo (boerse.de clone) built with Symfony 7 + React 19, deployed on Azure App Service with TiDB Cloud as the database.
 
+Demo website: [boersedemocontainer-b3fqbpgqevakbpbw.canadacentral-01.azurewebsites.net](https://boersedemocontainer-b3fqbpgqevakbpbw.canadacentral-01.azurewebsites.net/)
+
 ## Tech Stack
 
 | Layer | Technology |
